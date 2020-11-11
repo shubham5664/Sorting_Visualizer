@@ -197,7 +197,7 @@ export default class Visualizer extends Component {
                     </option>
                     <option value="merge">MergeSort</option>
                     <option value="select">SelectionSort</option>
-                    <option value="bubble">BubbleSort</option>
+                    {/* <option value="bubble">BubbleSort</option> */}
                   </select>
                 </div>
               </div>
