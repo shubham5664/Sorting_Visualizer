@@ -18,7 +18,7 @@ function App() {
     ); */
     console.log("log"+isMobile());
   
-    return isMobile() ? ( <Mobile_visualizer/> ) : ( <Visualizer /> )
+    return isMobile() ? ( <Visualizer/> ) : ( <Mobile_visualizer /> )
 }
 
 
