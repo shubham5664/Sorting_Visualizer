@@ -38,7 +38,7 @@ export default class Visualizer extends Component {
 
     var slider = document.getElementById("myRange");
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < num; i++) {
       array.push(randomInterval(5, 500));
     }
     this.setState({ array });
