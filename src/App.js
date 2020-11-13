@@ -10,15 +10,15 @@ function App() {
     return ( ( window.innerWidth <= 800 ) && ( window.innerHeight <= 600 ) );
   }
     
-   /*  return (
+    return (
       <div className="App">
         
-        <Mobile_visualizer></Mobile_visualizer>
+        {isMobile()?(<Mobile_visualizer/>):(<Visualizer/>)}
       </div>
-    ); */
+    );
     console.log("log"+isMobile());
   
-    return isMobile() ? ( <Visualizer/> ) : ( <Mobile_visualizer /> )
+   
 }
 
 
