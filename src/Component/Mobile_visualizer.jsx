@@ -67,7 +67,7 @@ export default class Visualizer extends Component {
       this.setState({ bar_num: 50 });
     } else if (num > 90 && num < 100) {
       this.setState({ Array_bar_width: 2 });
-      this.setState({ bar_num: 40 });
+      this.setState({ bar_num: 50 });
     }
   }
   mergesort() {

@@ -181,7 +181,7 @@ select::-ms-expand {
   padding: 10px 20px;
   font-size: 15px;
   text-align: center;
-  cursor: not-allowed;
+  cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #6666ff;
