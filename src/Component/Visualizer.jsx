@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "./Visualizer.css";
 import { selection } from "../Algorithm/SelectionSort";
 import { getMergeSortAnimations } from "../Algorithm/MergeSort";
+import { getBubbleSort } from "../Algorithm/BubbleSort";
+import { getquicksort } from "../Algorithm/QuickSort";
 
 export default class Visualizer extends Component {
   state = {
@@ -35,13 +37,10 @@ export default class Visualizer extends Component {
   }
   resetArray(num) {
     const array = [];
-
-    var slider = document.getElementById("myRange");
-
-    for (let i = 0; i < 5; i++) {
-      array.push(randomInterval(5, 500));
+    console.log("num:" + num);
+    for (let i = 0; i < num; i++) {
+      array.push(randomInterval(5, 450));
     }
-    this.setState({ array });
 
     if (num < 10) {
       this.setState({ Array_bar_width: 80 });
@@ -64,8 +63,10 @@ export default class Visualizer extends Component {
     } else if (num > 90 && num < 100) {
       this.setState({ Array_bar_width: 2 });
     }
+    this.setState({ array });
   }
   mergesort() {
+    disable();
     const animations = getMergeSortAnimations(this.state.array);
     console.log("" + animations);
     for (let i = 0; i < animations.length; i++) {
@@ -88,16 +89,20 @@ export default class Visualizer extends Component {
         }, i * this.state.selectSpeedType);
       }
     }
+    const RESTORE_TIME = parseInt(
+      this.state.selectSpeedType * animations.length
+    );
+    setTimeout(() => enable(), RESTORE_TIME);
   }
   selection() {
-    const animation1 = selection(this.state.array);
+    disable();
+    const animations = selection(this.state.array);
     const array = this.state.array;
-
-    for (let i = 0; i < animation1.length; i++) {
-      const arrayBars = document.getElementsByClassName("array-bar");
-      if (animation1[i][0] === "compare1" || animation1[i][0] === "compare2") {
-        const color = animation1[i][0] === "compare1" ? "red" : "turquoise";
-        const [temp, barOneIdx, barTwoIdx] = animation1[i];
+    const arrayBars = document.getElementsByClassName("array-bar");
+    for (let i = 0; i < animations.length; i++) {
+      if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
         const barOneStyle = arrayBars[barOneIdx].style;
         const barTwoStyle = arrayBars[barTwoIdx].style;
         setTimeout(() => {
@@ -106,12 +111,42 @@ export default class Visualizer extends Component {
         }, i * this.state.selectSpeedType);
       } else {
         setTimeout(() => {
-          const [temp, barOne, newHeight] = animation1[i];
+          const [temp, barOne, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOne].style;
           barOneStyle.height = `${newHeight}px`;
         }, i * this.state.selectSpeedType);
       }
     }
+    const RESTORE_TIME = parseInt(
+      this.state.selectSpeedType * animations.length
+    );
+    setTimeout(() => enable(), RESTORE_TIME);
+  }
+  bubblesort() {
+    const animations = getBubbleSort(this.state.array);
+    console.log("animation hello:" + animations);
+    const arrayBars = document.getElementsByClassName("array-bar");
+    for (let i = 0; i < animations.length; i++) {
+      if (animations[i][0] == "compare1" || animations[i][0] == "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
+        const barOneStyle = arrayBars[barOneIdx].style;
+        const barTwoStyle = arrayBars[barTwoIdx].style;
+        setTimeout(() => {
+          barOneStyle.backgroundColor = color;
+          barTwoStyle.backgroundColor = color;
+        }, i * this.state.selectSpeedType);
+      } else {
+        setTimeout(() => {
+          const [temp, barone, newheight] = animations[i];
+          const barOneStyle = arrayBars[barone].style;
+          barOneStyle.height = `${newheight}px`;
+        }, i * this.state.selectSpeedType);
+      }
+    }
+  }
+  quicksort() {
+    const animations = getquicksort(this.state.array);
   }
   visualize() {
     console.log("speed:" + this.state.slider_value);
@@ -120,6 +155,10 @@ export default class Visualizer extends Component {
       this.selection();
     } else if (this.state.selectAlgo === "merge") {
       this.mergesort();
+    } else if (this.state.selectAlgo === "bubble") {
+      this.bubblesort();
+    } else if (this.state.selectAlgo === "quick") {
+      this.quicksort();
     }
     console.log(this.state.selectSpeedType);
     if (
@@ -145,6 +184,7 @@ export default class Visualizer extends Component {
               <div class="col-5">
                 {" "}
                 <button
+                  id="random_array"
                   className="btn"
                   onClick={() => this.resetArray(this.state.slider_value)}
                 >
@@ -173,6 +213,7 @@ export default class Visualizer extends Component {
                     onChange={(e) =>
                       this.setState({ selectSpeedType: e.target.value })
                     }
+                    id="speed"
                   >
                     <option disabled selected hidden>
                       {" "}
@@ -190,6 +231,7 @@ export default class Visualizer extends Component {
                     onChange={(e) =>
                       this.setState({ selectAlgo: e.target.value })
                     }
+                    id="algorithm"
                   >
                     <option disabled selected hidden>
                       {" "}
@@ -197,16 +239,16 @@ export default class Visualizer extends Component {
                     </option>
                     <option value="merge">MergeSort</option>
                     <option value="select">SelectionSort</option>
-                    {/* <option value="bubble">BubbleSort</option> */}
+                    <option value="bubble">BubbleSort</option>
+                    <option value="quick">QuickSort</option>
                   </select>
                 </div>
               </div>
               <div class="col-2">
                 <button
-                  className={
-                    this.state.select1 === "false" ? "visual" : "visual1"
-                  }
+                  className="visual"
                   onClick={() => this.visualize()}
+                  id="visualizer"
                 >
                   Visualize!!
                 </button>
@@ -237,4 +279,48 @@ export default class Visualizer extends Component {
 function randomInterval(min, max) {
   //return random number between min and max
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+function disable() {
+  //generate array
+  document.getElementById("random_array").disabled = true;
+  document.getElementById("random_array").style.color = "red";
+  document.getElementById("random_array").style.cursor = "no-drop";
+  //range
+  document.getElementById("myRange").disabled = true;
+  document.getElementById("l1").style.color = "red";
+  document.getElementById("myRange").style.cursor = "no-drop";
+  //select speed
+  document.getElementById("speed").disabled = true;
+  document.getElementById("speed").style.color = "red";
+  document.getElementById("speed").style.cursor = "no-drop";
+  //select algorithm
+  document.getElementById("algorithm").disabled = true;
+  document.getElementById("algorithm").style.color = "red";
+  document.getElementById("algorithm").style.cursor = "no-drop";
+  //visualizer btn
+  document.getElementById("visualizer").disabled = true;
+  document.getElementById("visualizer").style.color = "red";
+  document.getElementById("visualizer").style.cursor = "no-drop";
+}
+function enable() {
+  //generate array
+  document.getElementById("random_array").disabled = false;
+  document.getElementById("random_array").style.color = "#ffffff";
+  document.getElementById("random_array").style.cursor = "pointer";
+  //range
+  document.getElementById("myRange").disabled = false;
+  document.getElementById("l1").style.color = "white";
+  document.getElementById("myRange").style.cursor = "pointer";
+  //select speed
+  document.getElementById("speed").disabled = false;
+  document.getElementById("speed").style.color = "black";
+  document.getElementById("speed").style.cursor = "pointer";
+  //select algorithm
+  document.getElementById("algorithm").disabled = false;
+  document.getElementById("algorithm").style.color = "black";
+  document.getElementById("algorithm").style.cursor = "pointer";
+  //visualizer btn
+  document.getElementById("visualizer").disabled = false;
+  document.getElementById("visualizer").style.color = "#ffffff";
+  document.getElementById("visualizer").style.cursor = "pointer";
 }

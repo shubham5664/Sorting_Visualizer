@@ -17,6 +17,7 @@ export default class Visualizer extends Component {
     super(props);
     this.state = {
       array: [],
+      bar_num: 15,
     };
   }
 
@@ -26,43 +27,48 @@ export default class Visualizer extends Component {
     this.resetArray(num);
   }
   componentDidMount() {
+    alert("please prefer Desktop or laptop for best Visualization");
     this.setState({ selectSpeedType: "null" });
     this.setState({ selectAlgo: "null" });
     this.setState({ select1: "false" });
-
     this.setState({ slider_value: 50 });
     this.resetArray(50);
   }
   resetArray(num) {
+    this.setState({ bar_num: 15 });
     const array = [];
 
     var slider = document.getElementById("myRange");
-
-    for (let i = 0; i < num; i++) {
+    console.log("bar_num:" + this.state.bar_num);
+    for (let i = 0; i < this.state.bar_num; i++) {
       array.push(randomInterval(5, 500));
     }
     this.setState({ array });
 
-    if (num < 10) {
-      this.setState({ Array_bar_width: 80 });
-    } else if (num > 10 && num <= 20) {
-      this.setState({ Array_bar_width: 40 });
-    } else if (num > 20 && num <= 30) {
+    if (num > 20 && num <= 30) {
       this.setState({ Array_bar_width: 20 });
+      this.setState({ bar_num: 15 });
     } else if (num > 30 && num <= 40) {
       this.setState({ Array_bar_width: 15 });
+      this.setState({ bar_num: 20 });
     } else if (num > 40 && num <= 50) {
       this.setState({ Array_bar_width: 10 });
+      this.setState({ bar_num: 25 });
     } else if (num > 50 && num <= 60) {
       this.setState({ Array_bar_width: 8 });
+      this.setState({ bar_num: 30 });
     } else if (num > 60 && num <= 70) {
       this.setState({ Array_bar_width: 5 });
+      this.setState({ bar_num: 35 });
     } else if (num > 70 && num <= 80) {
       this.setState({ Array_bar_width: 4 });
+      this.setState({ bar_num: 40 });
     } else if (num > 80 && num < 90) {
       this.setState({ Array_bar_width: 3 });
+      this.setState({ bar_num: 50 });
     } else if (num > 90 && num < 100) {
       this.setState({ Array_bar_width: 2 });
+      this.setState({ bar_num: 50 });
     }
   }
   mergesort() {
@@ -90,14 +96,14 @@ export default class Visualizer extends Component {
     }
   }
   selection() {
-    const animation1 = selection(this.state.array);
+    const animations = selection(this.state.array);
     const array = this.state.array;
 
-    for (let i = 0; i < animation1.length; i++) {
+    for (let i = 0; i < animations.length; i++) {
       const arrayBars = document.getElementsByClassName("array-bar");
-      if (animation1[i][0] === "compare1" || animation1[i][0] === "compare2") {
-        const color = animation1[i][0] === "compare1" ? "red" : "turquoise";
-        const [temp, barOneIdx, barTwoIdx] = animation1[i];
+      if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
         const barOneStyle = arrayBars[barOneIdx].style;
         const barTwoStyle = arrayBars[barTwoIdx].style;
         setTimeout(() => {
@@ -106,7 +112,7 @@ export default class Visualizer extends Component {
         }, i * this.state.selectSpeedType);
       } else {
         setTimeout(() => {
-          const [temp, barOne, newHeight] = animation1[i];
+          const [temp, barOne, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOne].style;
           barOneStyle.height = `${newHeight}px`;
         }, i * this.state.selectSpeedType);
@@ -216,7 +222,7 @@ export default class Visualizer extends Component {
         </div>
 
         <div class="row">
-          <div className="array_container">
+          <div className="array_container" style={{ height: `700px` }}>
             {array.map((value, idx) => (
               <div
                 className="array-bar"
