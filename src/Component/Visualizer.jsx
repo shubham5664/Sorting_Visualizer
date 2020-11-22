@@ -147,6 +147,26 @@ export default class Visualizer extends Component {
   }
   quicksort() {
     const animations = getquicksort(this.state.array);
+    console.log("animations:" + animations);
+    const arrayBars = document.getElementsByClassName("array-bar");
+    for (let i = 0; i < animations.length; i++) {
+      if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
+        const barOneStyle = arrayBars[barOneIdx].style;
+        const barTwoStyle = arrayBars[barTwoIdx].style;
+        setTimeout(() => {
+          barOneStyle.backgroundColor = color;
+          barTwoStyle.backgroundColor = color;
+        }, i * this.state.selectSpeedType);
+      } else {
+        setTimeout(() => {
+          const [temp, barOneIdx, newHeight] = animations[i];
+          const barOneStyle = arrayBars[barOneIdx].style;
+          barOneStyle.height = `${newHeight}px`;
+        }, i * this.state.selectSpeedType);
+      }
+    }
   }
   visualize() {
     console.log("speed:" + this.state.slider_value);
