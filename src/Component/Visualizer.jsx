@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import "./Visualizer.css";
 import { selection } from "../Algorithm/SelectionSort";
 import { getMergeSortAnimations } from "../Algorithm/MergeSort";
+import { getBubbleSort } from "../Algorithm/BubbleSort";
+import { getquicksort } from "../Algorithm/QuickSort";
 
 export default class Visualizer extends Component {
   state = {
@@ -35,13 +37,10 @@ export default class Visualizer extends Component {
   }
   resetArray(num) {
     const array = [];
-
-    var slider = document.getElementById("myRange");
-
+    console.log("num:" + num);
     for (let i = 0; i < num; i++) {
-      array.push(randomInterval(5, 500));
+      array.push(randomInterval(5, 450));
     }
-    this.setState({ array });
 
     if (num < 10) {
       this.setState({ Array_bar_width: 80 });
@@ -64,6 +63,7 @@ export default class Visualizer extends Component {
     } else if (num > 90 && num < 100) {
       this.setState({ Array_bar_width: 2 });
     }
+    this.setState({ array });
   }
   mergesort() {
     disable();
@@ -98,9 +98,8 @@ export default class Visualizer extends Component {
     disable();
     const animations = selection(this.state.array);
     const array = this.state.array;
-
+    const arrayBars = document.getElementsByClassName("array-bar");
     for (let i = 0; i < animations.length; i++) {
-      const arrayBars = document.getElementsByClassName("array-bar");
       if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
         const color = animations[i][0] === "compare1" ? "red" : "turquoise";
         const [temp, barOneIdx, barTwoIdx] = animations[i];
@@ -123,6 +122,32 @@ export default class Visualizer extends Component {
     );
     setTimeout(() => enable(), RESTORE_TIME);
   }
+  bubblesort() {
+    const animations = getBubbleSort(this.state.array);
+    console.log("animation hello:" + animations);
+    const arrayBars = document.getElementsByClassName("array-bar");
+    for (let i = 0; i < animations.length; i++) {
+      if (animations[i][0] == "compare1" || animations[i][0] == "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
+        const barOneStyle = arrayBars[barOneIdx].style;
+        const barTwoStyle = arrayBars[barTwoIdx].style;
+        setTimeout(() => {
+          barOneStyle.backgroundColor = color;
+          barTwoStyle.backgroundColor = color;
+        }, i * this.state.selectSpeedType);
+      } else {
+        setTimeout(() => {
+          const [temp, barone, newheight] = animations[i];
+          const barOneStyle = arrayBars[barone].style;
+          barOneStyle.height = `${newheight}px`;
+        }, i * this.state.selectSpeedType);
+      }
+    }
+  }
+  quicksort() {
+    const animations = getquicksort(this.state.array);
+  }
   visualize() {
     console.log("speed:" + this.state.slider_value);
     console.log("algorithm:" + this.state.selectAlgo);
@@ -130,6 +155,10 @@ export default class Visualizer extends Component {
       this.selection();
     } else if (this.state.selectAlgo === "merge") {
       this.mergesort();
+    } else if (this.state.selectAlgo === "bubble") {
+      this.bubblesort();
+    } else if (this.state.selectAlgo === "quick") {
+      this.quicksort();
     }
     console.log(this.state.selectSpeedType);
     if (
@@ -210,7 +239,8 @@ export default class Visualizer extends Component {
                     </option>
                     <option value="merge">MergeSort</option>
                     <option value="select">SelectionSort</option>
-                    {/* <option value="bubble">BubbleSort</option> */}
+                    <option value="bubble">BubbleSort</option>
+                    <option value="quick">QuickSort</option>
                   </select>
                 </div>
               </div>

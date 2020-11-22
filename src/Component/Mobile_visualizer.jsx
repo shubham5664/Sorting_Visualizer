@@ -27,6 +27,7 @@ export default class Visualizer extends Component {
     this.resetArray(num);
   }
   componentDidMount() {
+    alert("please prefer Desktop or laptop for best Visualization");
     this.setState({ selectSpeedType: "null" });
     this.setState({ selectAlgo: "null" });
     this.setState({ select1: "false" });
@@ -95,14 +96,14 @@ export default class Visualizer extends Component {
     }
   }
   selection() {
-    const animation1 = selection(this.state.array);
+    const animations = selection(this.state.array);
     const array = this.state.array;
 
-    for (let i = 0; i < animation1.length; i++) {
+    for (let i = 0; i < animations.length; i++) {
       const arrayBars = document.getElementsByClassName("array-bar");
-      if (animation1[i][0] === "compare1" || animation1[i][0] === "compare2") {
-        const color = animation1[i][0] === "compare1" ? "red" : "turquoise";
-        const [temp, barOneIdx, barTwoIdx] = animation1[i];
+      if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
+        const color = animations[i][0] === "compare1" ? "red" : "turquoise";
+        const [temp, barOneIdx, barTwoIdx] = animations[i];
         const barOneStyle = arrayBars[barOneIdx].style;
         const barTwoStyle = arrayBars[barTwoIdx].style;
         setTimeout(() => {
@@ -111,7 +112,7 @@ export default class Visualizer extends Component {
         }, i * this.state.selectSpeedType);
       } else {
         setTimeout(() => {
-          const [temp, barOne, newHeight] = animation1[i];
+          const [temp, barOne, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOne].style;
           barOneStyle.height = `${newHeight}px`;
         }, i * this.state.selectSpeedType);
@@ -221,7 +222,7 @@ export default class Visualizer extends Component {
         </div>
 
         <div class="row">
-          <div className="array_container">
+          <div className="array_container" style={{ height: `700px` }}>
             {array.map((value, idx) => (
               <div
                 className="array-bar"
