@@ -146,8 +146,8 @@ export default class Visualizer extends Component {
     }
   }
   quicksort() {
+    disable();
     const animations = getquicksort(this.state.array);
-    console.log("animations:" + animations);
     const arrayBars = document.getElementsByClassName("array-bar");
     for (let i = 0; i < animations.length; i++) {
       if (animations[i][0] === "compare1" || animations[i][0] === "compare2") {
@@ -167,6 +167,10 @@ export default class Visualizer extends Component {
         }, i * this.state.selectSpeedType);
       }
     }
+    const RESTORE_TIME = parseInt(
+      this.state.selectSpeedType * animations.length
+    );
+    setTimeout(() => enable(), RESTORE_TIME);
   }
   visualize() {
     console.log("speed:" + this.state.slider_value);
